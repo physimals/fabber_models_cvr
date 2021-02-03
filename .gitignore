@@ -1,0 +1,7 @@
+*.o
+*.a
+depend.mk
+fabber_cvr
+build*
+test/*.nii
+doc/html
