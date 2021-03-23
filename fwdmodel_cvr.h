@@ -52,11 +52,8 @@ protected:
     
     NEWMAT::ColumnVector m_pco2;
 
-    // Hyper/normocapnia difference
-    double m_diff_pco2;
-
     double PCO2(double t) const;
-
+    void PreprocCO2();
 private:
     /** Auto-register with forward model factory. */
     static FactoryRegistration<FwdModelFactory, CVRPETCO2Model> registration;
