@@ -265,29 +265,22 @@ void CVRPETCO2Model::Evaluate(const ColumnVector &params, ColumnVector &result) 
 
 double CVRPETCO2Model::PCO2(double t) const
 {
-    if (t <= 0) 
+    // Linearly interpolate PETCO2 curve. Assume
+    // constant before and after last point
+    int t_idx_0 = int(floor(t));
+    double t_idx_frac = t - double(t_idx_0);
+    if (t_idx_0 < 0)
     {
-        return 0;
+        return m_pco2(1);
+    }
+    if (t_idx_0 < m_pco2.Nrows()-1)
+    {
+        return t_idx_frac*m_pco2(t_idx_0+2) + (1-t_idx_frac)*m_pco2(t_idx_0+1);
     }
     else 
     {
-        // Linearly interpolate PETCO2 curve. Assume
-        // constant before and after last point
-        int t_idx_0 = int(floor(t));
-        double t_idx_frac = t - double(t_idx_0);
-        if (t_idx_0 < 0)
-        {
-            return m_pco2(1);
-        }
-        if (t_idx_0 < m_pco2.Nrows()-1)
-        {
-            return t_idx_frac*m_pco2(t_idx_0+2) + (1-t_idx_frac)*m_pco2(t_idx_0+1);
-        }
-        else 
-        {
-            return m_pco2(m_pco2.Nrows());
-        }
-    }   
+        return m_pco2(m_pco2.Nrows());
+    }
 }
 
 FwdModel *CVRPETCO2Model::NewInstance()
